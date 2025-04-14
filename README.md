@@ -1,1 +1,1 @@
-# -Challenge-1-Alura-Stores
+# Challenge-1-Alura-Stores
