@@ -33,6 +33,9 @@ Se asigna un identificador único (`Tienda 1`, `Tienda 2`, etc.) a cada `DataFra
 
 ```python
 tienda['id'] = 'Tienda 1'
+tienda2['id'] = 'Tienda 2'
+tienda3['id'] = 'Tienda 3'
+tienda4['id'] = 'Tienda 4'
 ```
 
 ---
@@ -63,8 +66,14 @@ Se agrupa por tienda y categoría de producto, contando cuántos productos fuero
 
 ```python
 ventas_categoria = (
-    all_stores.groupby(['id', 'Categoría del Producto'])['Precio'].count().reset_index()
+    all_stores
+    .groupby(['id', 'Categoría del Producto'])['Precio']
+    .count()
+    .reset_index()
+    .sort_values(by=['id', 'Categoría del Producto'], ascending=False,)
 )
+
+productos_mayores = ventas_categoria.groupby('id').head(1).reset_index(drop=True).sort_values(by='id')
 ```
 
 Se extrae la categoría con mayor número de productos vendidos por tienda.
@@ -90,6 +99,31 @@ calificacion_tienda = all_stores.groupby('id')['Calificación'].mean().reset_ind
 Se agrupa por tienda y producto, contando cuántas veces se vendió cada uno.
 
 ```python
+producto_menos_mas_vendidos = (
+    all_stores
+    .groupby(['id','Producto'])['Precio']
+    .agg(['count'])
+    .reset_index()
+)
+
+producto_mas_vendido =(
+    producto_menos_mas_vendidos
+    .sort_values(by=['id','count'], ascending=[True, False])
+    .groupby(['id'])
+    .head(1)
+    .reset_index(drop=True)
+)
+
+producto_menos_vendido =(
+    producto_menos_mas_vendidos
+    .sort_values(by=['id','count'], ascending=[True, False])
+    .groupby(['id'])
+    .tail(1)
+    .reset_index(drop=True)
+)
+
+resultado = pd.merge(producto_mas_vendido, producto_menos_vendido, on='id')
+
 producto_menos_mas_vendidos = all_stores.groupby(['id','Producto'])['Precio'].count().reset_index()
 ```
 
@@ -108,7 +142,28 @@ Se combinan en un `DataFrame` llamado `resultado`.
 Se calcula el gasto total y promedio en envío por tienda.
 
 ```python
-total_valor_envio = all_stores.groupby('id')['Costo de envío'].agg(['sum', 'mean']).reset_index()
+total_valor_envio = (
+    all_stores
+    .groupby('id')['Costo de envío']
+    .agg(['sum', 'mean'])
+    .reset_index()
+    .rename(columns={
+        'sum': 'total_costo_envio',
+        'mean': 'promedio_costo_envio'
+    })
+)
+
+total_ventas = (
+    all_stores
+    .groupby('id', as_index=False)['Precio']
+    .sum()
+    .rename(columns={'Precio': 'total_venta'})
+
+)
+porcentajes_gastos = pd.merge(total_valor_envio, total_ventas, on='id')
+
+porcentajes_gastos['porcentaje_gasto__promedio_envio'] = (porcentajes_gastos['total_costo_envio'] * 100) / porcentajes_gastos['total_venta']
+
 ```
 
 Luego se calcula el porcentaje que representa el gasto en envío con respecto al total de ventas.
