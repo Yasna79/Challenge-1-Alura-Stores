@@ -57,6 +57,7 @@ facturacion_tiendas = all_stores.groupby('id')['Precio'].sum().reset_index()
 ```
 
 **Visualización**: Gráfico de torta (`pie chart`) con la distribución porcentual de ingresos.
+
 ![image](https://github.com/user-attachments/assets/a082bcdb-16c8-4584-9935-15e145df8cc7)
 
 ---
@@ -79,6 +80,7 @@ productos_mayores = ventas_categoria.groupby('id').head(1).reset_index(drop=True
 Se extrae la categoría con mayor número de productos vendidos por tienda.
 
 **Visualización**: Gráfico de barras con la categoría más vendida de cada tienda.
+
 ![image](https://github.com/user-attachments/assets/59d2cbfc-e3d5-47bc-b8b7-57c60a1e3f78)
 
 ---
@@ -91,6 +93,7 @@ calificacion_tienda = all_stores.groupby('id')['Calificación'].mean().reset_ind
 ```
 
 **Visualización**: Gráfico de barras.
+
 ![image](https://github.com/user-attachments/assets/0701edcb-6e00-438c-ad5c-2e72f45f6058)
 
 ---
@@ -134,6 +137,7 @@ Luego se extrae:
 Se combinan en un `DataFrame` llamado `resultado`.
 
 **Visualización**: Gráfico de barras dobles (verde = más vendido, rojo = menos vendido), con etiquetas de nombre de producto.
+
 ![image](https://github.com/user-attachments/assets/62a145ab-07f7-4d77-8529-c0fefc2b3de9)
 
 ---
@@ -169,6 +173,7 @@ porcentajes_gastos['porcentaje_gasto__promedio_envio'] = (porcentajes_gastos['to
 Luego se calcula el porcentaje que representa el gasto en envío con respecto al total de ventas.
 
 **Visualización**: Gráfico de barras con el porcentaje de gasto en envío.
+
 ![image](https://github.com/user-attachments/assets/567d9fae-169f-4015-b2e2-eb1b4ecfcc95)
 
 ---
